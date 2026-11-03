@@ -24,6 +24,12 @@
 
 struct CardRef;
 
+namespace
+{
+constexpr int CARD_INFO_SPLITTER_POSITION_SCALE = 10000;
+constexpr int TRANSFORMATION_BUTTON_WEIGHT = 800;
+}
+
 CardInfoFrameWidget::CardInfoFrameWidget(QWidget *parent)
     : QTabWidget(parent), viewTransformationButton(nullptr), cardTextOnly(false)
 {
@@ -63,6 +69,7 @@ CardInfoFrameWidget::CardInfoFrameWidget(QWidget *parent)
     splitter = new QSplitter();
     splitter->setObjectName("splitter");
     splitter->setOrientation(Qt::Vertical);
+    connect(splitter, &QSplitter::splitterMoved, this, [this] { updateSplitterState(); });
 
     tab3Layout = QtUtils::makeLayout<QVBoxLayout>();
     tab3Layout->setObjectName("tab3Layout");
@@ -105,6 +112,10 @@ void CardInfoFrameWidget::setViewTransformationButtonVisibility(bool visible)
  */
 void CardInfoFrameWidget::refreshLayout()
 {
+    if (currentIndex() != ImageAndTextView) {
+        updateSplitterState();
+    }
+
     switch (currentIndex()) {
         case ImageOnlyView:
         case TextOnlyView:
@@ -122,11 +133,88 @@ void CardInfoFrameWidget::refreshLayout()
                 splitter->addWidget(viewTransformationButton);
             }
             splitter->addWidget(text);
+            applySplitterState();
             break;
         default:
             break;
     }
     retranslateUi();
+}
+
+QByteArray CardInfoFrameWidget::getSplitterState() const
+{
+    if (splitter->count() > 1) {
+        const QList<int> sizes = splitter->sizes();
+        const int pictureIndex = splitter->indexOf(pic);
+        const int textIndex = splitter->indexOf(text);
+        if (pictureIndex >= 0 && textIndex >= 0) {
+            const int pictureSize = sizes.at(pictureIndex);
+            const int textSize = sizes.at(textIndex);
+            const int totalSize = pictureSize + textSize;
+            if (totalSize > 0) {
+                return QByteArray::number(pictureSize * CARD_INFO_SPLITTER_POSITION_SCALE / totalSize);
+            }
+        }
+    }
+    return splitterState;
+}
+
+void CardInfoFrameWidget::setSplitterState(const QByteArray &state)
+{
+    bool valid = false;
+    const int position = state.toInt(&valid);
+    if (!valid || position < 0 || position > CARD_INFO_SPLITTER_POSITION_SCALE) {
+        return;
+    }
+
+    splitterState = state;
+    applySplitterState();
+}
+
+void CardInfoFrameWidget::resetSplitterState()
+{
+    splitterState.clear();
+    if (splitter->count() > 1) {
+        QList<int> sizes;
+        for (int i = 0; i < splitter->count(); ++i) {
+            sizes.append(1);
+        }
+        splitter->setSizes(sizes);
+    }
+}
+
+void CardInfoFrameWidget::updateSplitterState()
+{
+    const QByteArray state = getSplitterState();
+    if (!state.isEmpty()) {
+        splitterState = state;
+    }
+}
+
+void CardInfoFrameWidget::applySplitterState()
+{
+    if (splitterState.isEmpty() || splitter->count() < 2) {
+        return;
+    }
+
+    bool valid = false;
+    const int position = splitterState.toInt(&valid);
+    if (!valid || position < 0 || position > CARD_INFO_SPLITTER_POSITION_SCALE) {
+        return;
+    }
+
+    if (splitter->count() == 2) {
+        QList<int> sizes{0, 0};
+        sizes[splitter->indexOf(pic)] = position;
+        sizes[splitter->indexOf(text)] = CARD_INFO_SPLITTER_POSITION_SCALE - position;
+        splitter->setSizes(sizes);
+    } else if (splitter->count() == 3) {
+        // The optional button gets a small share without changing the saved image/text ratio.
+        QList<int> sizes{TRANSFORMATION_BUTTON_WEIGHT, TRANSFORMATION_BUTTON_WEIGHT, TRANSFORMATION_BUTTON_WEIGHT};
+        sizes[splitter->indexOf(pic)] = position;
+        sizes[splitter->indexOf(text)] = CARD_INFO_SPLITTER_POSITION_SCALE - position;
+        splitter->setSizes(sizes);
+    }
 }
 
 void CardInfoFrameWidget::setViewMode(int mode)
