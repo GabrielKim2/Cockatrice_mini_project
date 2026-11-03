@@ -330,18 +330,18 @@ void DeckEditorDeckDockWidget::createDeckDock()
     auto *bottomWidget = new QWidget;
     bottomWidget->setLayout(lowerLayout);
 
-    auto *split = new QSplitter;
-    split->setObjectName("deckSplitter");
-    split->setOrientation(Qt::Vertical);
-    split->setChildrenCollapsible(true);
-    split->addWidget(topWidget);
-    split->addWidget(bottomWidget);
-    split->setStretchFactor(0, 1);
-    split->setStretchFactor(1, 4);
+    deckSplitter = new QSplitter;
+    deckSplitter->setObjectName("deckSplitter");
+    deckSplitter->setOrientation(Qt::Vertical);
+    deckSplitter->setChildrenCollapsible(true);
+    deckSplitter->addWidget(topWidget);
+    deckSplitter->addWidget(bottomWidget);
+    deckSplitter->setStretchFactor(0, 1);
+    deckSplitter->setStretchFactor(1, 4);
 
     auto *rightFrame = new QVBoxLayout;
     rightFrame->setObjectName("rightFrame");
-    rightFrame->addWidget(split);
+    rightFrame->addWidget(deckSplitter);
 
     auto *deckDockContents = new QWidget();
     deckDockContents->setObjectName("deckDockContents");
@@ -357,6 +357,23 @@ void DeckEditorDeckDockWidget::createDeckDock()
     if (CardDatabaseManager::getInstance()->getLoadStatus() == LoadStatus::Ok) {
         initializeFormats();
     }
+}
+
+QByteArray DeckEditorDeckDockWidget::getSplitterState() const
+{
+    return deckSplitter->saveState();
+}
+
+void DeckEditorDeckDockWidget::setSplitterState(const QByteArray &state)
+{
+    if (!state.isEmpty()) {
+        deckSplitter->restoreState(state);
+    }
+}
+
+void DeckEditorDeckDockWidget::resetSplitterState()
+{
+    deckSplitter->setSizes({1, 4});
 }
 
 void DeckEditorDeckDockWidget::initializeFormats()

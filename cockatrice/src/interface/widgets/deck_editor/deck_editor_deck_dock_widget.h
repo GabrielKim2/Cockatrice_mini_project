@@ -11,6 +11,7 @@
 #include "../../key_signals.h"
 #include "libcockatrice/card/printing/exact_card.h"
 
+#include <QByteArray>
 #include <QDockWidget>
 #include <QModelIndexList>
 #include <QString>
@@ -37,6 +38,7 @@ class QPushButton;
 class QTextEdit;
 class QTimer;
 class SettingsButtonWidget;
+class QSplitter;
 
 class DeckEditorDeckDockWidget : public QDockWidget
 {
@@ -50,6 +52,9 @@ public:
     QLabel *playmatLabel;
     QPushButton *playmatSettingsButton;
     void createDeckDock();
+    QByteArray getSplitterState() const;
+    void setSplitterState(const QByteArray &state);
+    void resetSplitterState();
     ExactCard getCurrentCard();
     void retranslateUi();
 
@@ -106,6 +111,7 @@ private:
     QAction *aRemoveCard, *aIncrement, *aDecrement, *aSwapCard;
 
     CommanderBracketWidget *commanderBracketWidget;
+    QSplitter *deckSplitter;
 
     DeckListModel *getModel() const;
     [[nodiscard]] QModelIndexList getSelectedCardNodeSourceIndices() const;

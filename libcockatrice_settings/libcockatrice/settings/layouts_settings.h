@@ -25,9 +25,13 @@ public:
 
     void setDeckEditorLayoutState(const QByteArray &value);
     void setDeckEditorGeometry(const QByteArray &value);
+    void setDeckEditorCardInfoSplitterState(const QByteArray &value);
+    void setDeckEditorDeckSplitterState(const QByteArray &value);
 
     void setVisualDeckEditorLayoutState(const QByteArray &value);
     void setVisualDeckEditorGeometry(const QByteArray &value);
+    void setVisualDeckEditorCardInfoSplitterState(const QByteArray &value);
+    void setVisualDeckEditorDeckSplitterState(const QByteArray &value);
 
     void setDeckEditorDbHeaderState(const QByteArray &value);
     void setSetsDialogHeaderState(const QByteArray &value);
@@ -44,9 +48,13 @@ public:
 
     QByteArray getDeckEditorLayoutState() const;
     QByteArray getDeckEditorGeometry() const;
+    QByteArray getDeckEditorCardInfoSplitterState() const;
+    QByteArray getDeckEditorDeckSplitterState() const;
 
     QByteArray getVisualDeckEditorLayoutState() const;
     QByteArray getVisualDeckEditorGeometry() const;
+    QByteArray getVisualDeckEditorCardInfoSplitterState() const;
+    QByteArray getVisualDeckEditorDeckSplitterState() const;
 
     QByteArray getDeckEditorDbHeaderState() const;
     QByteArray getSetsDialogHeaderState() const;

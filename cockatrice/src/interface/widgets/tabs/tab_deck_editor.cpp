@@ -2,6 +2,7 @@
 
 #include "../../../client/settings/cache_settings.h"
 #include "../../../client/settings/shortcuts_settings.h"
+#include "../cards/card_info_frame_widget.h"
 #include "../deck_editor/deck_editor_card_database_dock_widget.h"
 #include "../deck_editor/deck_editor_card_info_dock_widget.h"
 #include "../deck_editor/deck_editor_deck_dock_widget.h"
@@ -137,6 +138,8 @@ void TabDeckEditor::loadLayout()
         restoreState(layoutState);
         restoreGeometry(layouts.getDeckEditorGeometry());
     }
+    cardInfoDockWidget->cardInfo->setSplitterState(layouts.getDeckEditorCardInfoSplitterState());
+    deckDockWidget->setSplitterState(layouts.getDeckEditorDeckSplitterState());
 }
 
 /**
@@ -144,6 +147,9 @@ void TabDeckEditor::loadLayout()
  */
 void TabDeckEditor::restartLayout()
 {
+    cardInfoDockWidget->cardInfo->resetSplitterState();
+    deckDockWidget->resetSplitterState();
+
     // Show/hide and reset floating
     for (auto dockWidget : dockToActions.keys()) {
         dockWidget->setVisible(true);
@@ -174,6 +180,8 @@ bool TabDeckEditor::eventFilter(QObject *o, QEvent *e)
         LayoutsSettings &layouts = SettingsCache::instance().layouts();
         layouts.setDeckEditorLayoutState(saveState());
         layouts.setDeckEditorGeometry(saveGeometry());
+        layouts.setDeckEditorCardInfoSplitterState(cardInfoDockWidget->cardInfo->getSplitterState());
+        layouts.setDeckEditorDeckSplitterState(deckDockWidget->getSplitterState());
     }
     return false;
 }

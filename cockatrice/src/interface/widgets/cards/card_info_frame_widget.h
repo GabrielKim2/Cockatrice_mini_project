@@ -7,6 +7,7 @@
 #ifndef CARDFRAME_H
 #define CARDFRAME_H
 
+#include <QByteArray>
 #include <QString>
 #include <QTabWidget>
 #include <libcockatrice/card/printing/exact_card.h>
@@ -36,6 +37,9 @@ private:
 
     void setViewTransformationButtonVisibility(bool visible);
     void refreshLayout();
+    QByteArray splitterState;
+    void updateSplitterState();
+    void applySplitterState();
 
 public:
     enum ViewMode
@@ -50,6 +54,9 @@ public:
     {
         return exactCard;
     }
+    QByteArray getSplitterState() const;
+    void setSplitterState(const QByteArray &state);
+    void resetSplitterState();
     void retranslateUi();
 
 public slots:

@@ -13,6 +13,8 @@ const static QString SIZE_PROP = "widgetSize";
 const static QString GROUP_MAIN_WINDOW = "mainWindow";
 const static QString GROUP_DECK_EDITOR = "deckEditor";
 const static QString GROUP_VISUAL_DECK_EDITOR = "visualDeckEditor";
+const static QString CARD_INFO_SPLITTER_PROP = "cardInfoSplitter";
+const static QString DECK_SPLITTER_PROP = "deckSplitter";
 const static QString GROUP_DECK_EDITOR_DB = "deckEditorDb";
 const static QString GROUP_SETS_DIALOG = "setsDialog";
 const static QString GROUP_TOKEN_DIALOG = "tokenDialog";
@@ -54,6 +56,26 @@ void LayoutsSettings::setDeckEditorGeometry(const QByteArray &value)
     setValue(value, GEOMETRY_PROP, GROUP_DECK_EDITOR);
 }
 
+QByteArray LayoutsSettings::getDeckEditorCardInfoSplitterState() const
+{
+    return getValue(CARD_INFO_SPLITTER_PROP, GROUP_DECK_EDITOR).toByteArray();
+}
+
+void LayoutsSettings::setDeckEditorCardInfoSplitterState(const QByteArray &value)
+{
+    setValue(value, CARD_INFO_SPLITTER_PROP, GROUP_DECK_EDITOR);
+}
+
+QByteArray LayoutsSettings::getDeckEditorDeckSplitterState() const
+{
+    return getValue(DECK_SPLITTER_PROP, GROUP_DECK_EDITOR).toByteArray();
+}
+
+void LayoutsSettings::setDeckEditorDeckSplitterState(const QByteArray &value)
+{
+    setValue(value, DECK_SPLITTER_PROP, GROUP_DECK_EDITOR);
+}
+
 QByteArray LayoutsSettings::getVisualDeckEditorLayoutState() const
 {
     return getValue(STATE_PROP, GROUP_VISUAL_DECK_EDITOR).toByteArray();
@@ -72,6 +94,26 @@ QByteArray LayoutsSettings::getVisualDeckEditorGeometry() const
 void LayoutsSettings::setVisualDeckEditorGeometry(const QByteArray &value)
 {
     setValue(value, GEOMETRY_PROP, GROUP_VISUAL_DECK_EDITOR);
+}
+
+QByteArray LayoutsSettings::getVisualDeckEditorCardInfoSplitterState() const
+{
+    return getValue(CARD_INFO_SPLITTER_PROP, GROUP_VISUAL_DECK_EDITOR).toByteArray();
+}
+
+void LayoutsSettings::setVisualDeckEditorCardInfoSplitterState(const QByteArray &value)
+{
+    setValue(value, CARD_INFO_SPLITTER_PROP, GROUP_VISUAL_DECK_EDITOR);
+}
+
+QByteArray LayoutsSettings::getVisualDeckEditorDeckSplitterState() const
+{
+    return getValue(DECK_SPLITTER_PROP, GROUP_VISUAL_DECK_EDITOR).toByteArray();
+}
+
+void LayoutsSettings::setVisualDeckEditorDeckSplitterState(const QByteArray &value)
+{
+    setValue(value, DECK_SPLITTER_PROP, GROUP_VISUAL_DECK_EDITOR);
 }
 
 QByteArray LayoutsSettings::getDeckEditorDbHeaderState() const
